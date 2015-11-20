@@ -1,5 +1,5 @@
-MAIN=sbc-template.tex
-AUX=sbc-template.aux
+MAIN=datawarehouse.tex
+AUX=datawarehouse.aux
 
 all:
 	pdflatex $(MAIN)
