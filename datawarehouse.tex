@@ -28,36 +28,57 @@
 \maketitle
 
 \begin{abstract}
-  Do we need an abstract here?
+  Do we need an abstract here? I think we do!
 \end{abstract}
      
 \begin{resumo} 
-  Precisamos de um resumo aqui?
+  Precisamos de um resumo aqui? Acho que sim!
 \end{resumo}
 
 
-\section{Contextualização e motivação do tema}
+\section{Motivação} % Contextualização e motivação do tema
 
-Aqui diria por que Data Warehouses são legais \cite{kimball2011data}
+%Aqui diria por que Data Warehouses são legais \cite{kimball2011data}
 
-\section{Principais conceitos relacionados ao tema} \label{sec:firstpage}
+De acordo com \cite{Elmasri1999}, o crescente poder de processamento e a sofisticação das ferramentas e técnicas analíticas resultaram no desenvolvimento das \textit{data warehouses}. \textit{Data warehouses} comumente oferecem armazenamento, funcionalidades e responsividade a consultas de um modo que não pode ser realizado em bancos de dados relacionais orientados a transação. Além disso, possuem seu foco em proporcionar informações que sejam úteis a usuários responsáveis por atividades gerenciais, dando suporte à tomada de decisões. Além disso, segundo \cite{Takecian2014}, com o passar dos anos houve um grande crescimento do número de aplicações que necessitam integrar dados provenientes de diversas fontes distintas e muitas vezes o modelo que mais se encaixava na resolução dos problemas de integração de dados é a utilização de um \textit{data warehouse} para unificar os dados.
 
-Dar uma explicada com base no livro de Data Warehouse o que são elas e
+\section{Conceitos básicos} \label{sec:firstpage} %Principais conceitos relacionados ao tema
 
-\section{Descrição do estado da arte de trabalhos teóricos e também de ferramentas de software relacionadas ao tema}
+%Dar uma explicada com base no livro de Data Warehouse o que são elas. \cite{Inmon1992}
 
-Falar as ferramentas que existem, mostrar o SpagoBI, o Vertica e talvez
+Apesar de não haver uma definição única para o que é um \textit{data warehouse}, \cite{Inmon1992} a define como uma coleção de dados orientada a assunto, integrada, não volátil e variável no tempo para o suporte às decisões de gerência. 
 
-algum outro se achar artigos
+A primeira característica de uma \textit{data warehouse} é a orientação a assuntos. Nela é dito que cada tipo de empresa possui seu próprio conjunto de assuntos de interesse, assim, a \textit{data warehouse} deve ser específica e espelhar o domínio de aplicação da organização que a usa.
 
-\section{Um pouco mais de detalhes de ao menos uma ferramenta escolhida para ilustrar a implementação de conceitos abordados no trabalho}
+A segunda principal característica das \textit{data warehouses} é a integração. Como os dados contidos em uma \textit{data warehouse} são provenientes de múltiplas fontes, frequentemente existem diferenças em como os mesmos dados são representados em cada sistema de origem, como ilustra a figura \ref{fig:integracao}, tornando necessária a execução de operações como conversão, re-formatação e re-sequenciamento para que só então os dados sejam armazenados dentro da estrutura da \textit{data warehouse}.
+
+A não volatilidade define que diferentemente dos SGBDs convencionais onde os dados são acessados e manipulados frequentemente em pequenas quantidades, os dados de uma \textit{data warehouse} são carregados e acessados em massa e não são atualizados. Quando dados são carregados, esse carregamento é feito através de \textit{snapshots} e quando ocorrem alterações nos dados, um novo \textit{snapshot} é carregado, mantendo o histórico dos dados armazenados.
+
+A última característica das \textit{data warehouses} é a variação no tempo. Variação de tempo implica que cada unidade de dados na \textit{data warehouse} é válida em algum um momento no tempo. Em alguns casos, um registro possui um carimbo de tempo. Em outros casos, um registro tem uma data de transação. Mas, em todos os casos, existe alguma forma de marcação de tempo para exibir o momento no tempo no qual o registro é válido.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/integracao.png}
+\caption{Problemas de integração. \cite{Inmon1992}.}
+\label{fig:integracao}
+\end{figure}
+
+
+
+
+\section{Estado da arte} %Descrição do estado da arte de trabalhos teóricos e também de ferramentas de software relacionadas ao tema
+
+Falar as ferramentas que existem, mostrar o SpagoBI, o Vertica e talvez algum outro se achar artigos
+
+\section{Vertica}%Um pouco mais de detalhes de ao menos uma ferramenta escolhida para ilustrar a implementação de conceitos abordados no trabalho
 
 Aqui começamos a mostrar por que o Vertica é legal. Armazenamento
 
-
-\section{Um estudo de caso, reportando o uso da ferramenta escolhida para a criação e manipulação de um banco de dados de exemplo.}\label{sec:figs}
+\section{Estudo de caso}\label{sec:figs}%Um estudo de caso, reportando o uso da ferramenta escolhida para a criação e manipulação de um banco de dados de exemplo.
 
 Rodar o Vertica e escrever (com imagens) como se usa, desde os dados no banco relacional até a consulta.
+
+\section{Conclusão}
 
 %\begin{figure}[ht]
 %\centering
