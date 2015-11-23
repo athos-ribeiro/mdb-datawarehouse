@@ -19,3 +19,11 @@ colunar, otimização para recuperação de informação...
 criação e manipulação de um banco de dados de exemplo.
 - Rodar o Vertica e escrever (com imagens) como se usa, desde os dados no
 banco relacional até a consulta.
+
+# Ficha de avaliação:
+Motivação/contexto
+Fundamentação teórica
+Estudo de caso
+Didática
+Domínio do conteúdo
+Avaliação geral
