@@ -1,0 +1,24 @@
+datalog:
+  volume de dados
+  licenças
+  aplicação em sistemas distribuídos / paralelismos
+
+bigdata e SL / spark:
+  escalabilidade automática / coreografia baseada no volume de dados
+  panorama geral de ferramentas semelhantes
+    agrupar por características
+
+mongoDB:
+  como funciona o armazenamento interno?
+  como funcionam replicações e particionamentos?
+  identificar características principais
+    tabela (mongo vs couch)
+      indexação
+      distribuição
+      etc
+
+Grafos:
+  faltou didáica
+  tempo
+  faltou uma introdução ao problema (o que é uma consulta em grafo? Para que separar em nós?)
+
