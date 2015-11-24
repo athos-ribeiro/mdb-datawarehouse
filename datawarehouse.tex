@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 
 \usepackage{sbc-template}
+\usepackage{listings}
 
 \usepackage{graphicx,url}
 
@@ -63,12 +64,75 @@ A última característica das \textit{data warehouses} é a variação no tempo. Vari
 \label{fig:integracao}
 \end{figure}
 
+%ETL
+%\textit{Extract-Transform-Load} (ETL)
+% Dado que as diferentes informações de um DWH vêm de fontes diferentes, é necessários que se integrem tais fontes...
 
+%OLAP
+%\textit{On-Line Analytical Processing} (OLAP)
 
+%ROLAP vs MOLAP vs HOLAP
+
+%CUBOS
 
 \section{Estado da arte} %Descrição do estado da arte de trabalhos teóricos e também de ferramentas de software relacionadas ao tema
+%Falar as ferramentas que existem, mostrar o SpagoBI, o Vertica e talvez algum outro se achar artigos
 
-Falar as ferramentas que existem, mostrar o SpagoBI, o Vertica e talvez algum outro se achar artigos
+Até alguns anos atrás, o uso industrial de ferramentas \textit{open source} para \textit{Business Intelligence} ainda não era tão abrangente quanto o uso de ferramentas proprietárias, ferramentas ETL ainda não eram maduras o suficiente e ferramentas OLAP não eram tão robustas para uso comercial. Em geral, a um dos maiores problemas encontrados para a maior parte das ferramentas é a falta de documentação apropriada. \cite{thomsen2005survey}.
+
+A crescente demanda por ferramentas de \textit{Buisiness Inteligence} tem atraído diversas empresas para esta área. Isto também tem acontecido no mundo de ferramentas Livres, onde diversas soluções interessantes têm surgido nos últimos anos \cite{gioia2008spagobi}. Dentre tais ferramentas, duas que têm se destacado nos últimos anos são a Pentaho, com um sistema de licença Livre e comercial, onde a última adiciona módulos proprietários, documentação e serviços à ferramenta, e a SpagoBI, com uma filosofia totalmente Livre (sem versões comerciais).
+
+\subsection{Ferramentas}
+
+\subsubsection{Mondrian}
+
+Mondrian, que é parte do projeto Pentaho\footnote{\url{pentaho.com}}, é um servidor OLAP implementado em Java orientado a ROLAP e pode ser utilizado com qualquer SGBD que possua um \textit{driver} JDBC \cite{thomsen2005survey}. Licenciado sob \textit{Eclipse Public License 1.0}\footnote{\url{http://www.eclipse.org/legal/epl-v10.html}}, o Mondrian é uma ferramenta livre. A documentação\footnote{\url{http://mondrian.pentaho.com/documentation}} da ferramenta afirma que ela é capaz de trabalhar com conjuntos de dados de tamanho significativo, desde que o SGBD seja capaz de trabalhar com tal conjunto de dados, dado que as agregações são realizadas pelos SGBDs.
+
+Mondrian executa consultas escritas em linguagem MDX (\textit{Multi-Dimentional Expressions})\footnote{linguagem introduzida pela Microsoft em 1998, posteriormente proposto como padrão pela empresa, aumentando sua adoção em meio a desenvolvedores de aplicações} e apresenta resultados em um formato multidimensional\footnote{Embora os formatos sejam apresentados em formato multidimensional, os mesmos são armazenados em formato relacional} através de uma API em Java. A ferramenta utiliza cubos particionados, permitindo diversas tabelas de fatos (um cubo particionado possui diversas tabelas de fatos).
+
+\begin{lstlisting}[caption=Exemplo de consulta em MDX]
+SELECT {[Measures].[Unit Sales], [Measures].[Store Sales]}
+    ON COLUMNS, {[Product].members} ON ROWS
+FROM [Sales]
+WHERE [Time].[1997].[Q2] 
+\end{lstlisting}
+
+A arquitetura da ferramenta é definida em 4 camadas:
+
+\begin{itemize}
+  \item Camada de apresentação
+  \item Camada dimensional
+  \item Camada estrela (\textit{Star Layer})
+  \item Camada de armazenamento
+\end{itemize}
+
+A \textbf{camada de apresentação} determina como o usuário visualiza e interage com os dados. Na \textbf{camada dimensional}, as consultas em MDX são avaliadas e executadas. A \textbf{camada estrela} é responsável por manter as agregações em cache, quando a camada dimensional envia requisições e as agregações requisitadas não possuem e nem podem derivar os conjuntos de valores requisitados, uma requisição à \textbf{camada de armazenamento} é realizada. Esta camada é composta por um SGBD relacional.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/mondrian_arch.png}
+\caption{Arquitetura: Mondrian. Fonte: mondrian.pentaho.com}
+\label{fig:mondrian}
+\end{figure}
+
+\subsubsection{SpagoBI}
+
+SpagoBI é uma plataforma completa de integração para \textit{Buisiness Intelligence}, cobrindo toda a extensão de necessidades de análise, incluindo ETL, OLAP e \textbf{data mining}. Esta integração é feita através de \textit{engines}, possibilitando que o usuário escolha quais ferramentas devem compor sua plataforma \cite{gioia2008spagobi}. As ferramentas que compõe os diversos módulos da SpagoBI podem ser parte do projeto SpagoBI, ferramentas de outros projetos de Licenças Livres ou variações de tais projetos \cite{golfarelli2009open}
+
+A arquitetura da ferramenta é definida em 3 camadas:
+
+\begin{itemize}
+  \item Camada de entrega
+  \item Camada analítica
+  \item Camada de dados e metadados
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/spagoBI_arch.png}
+\caption{Arquitetura: SagoBI. Fonte: wiki.spagobi.org}
+\label{fig:spagoBI}
+\end{figure}
 
 \section{Vertica}%Um pouco mais de detalhes de ao menos uma ferramenta escolhida para ilustrar a implementação de conceitos abordados no trabalho
 
