@@ -78,9 +78,9 @@ A última característica das \textit{data warehouses} é a variação no tempo. Vari
 \section{Estado da arte} %Descrição do estado da arte de trabalhos teóricos e também de ferramentas de software relacionadas ao tema
 %Falar as ferramentas que existem, mostrar o SpagoBI, o Vertica e talvez algum outro se achar artigos
 
-Até alguns anos atrás, o uso industrial de ferramentas \textit{open source} para \textit{Business Intelligence} ainda não era tão abrangente quanto o uso de ferramentas proprietárias, ferramentas ETL ainda não eram maduras o suficiente e ferramentas OLAP não eram tão robustas para uso comercial. Em geral, a um dos maiores problemas encontrados para a maior parte das ferramentas é a falta de documentação apropriada. \cite{thomsen2005survey}.
+Até alguns anos atrás, o uso industrial de ferramentas \textit{open source} para \textit{Business Intelligence} ainda não era tão abrangente quanto o uso de ferramentas proprietárias. Ferramentas ETL ainda não eram maduras o suficiente e ferramentas OLAP não eram tão robustas para uso comercial. Em geral, um dos maiores problemas encontrados para a maior parte das ferramentas era a falta de documentação apropriada. \cite{thomsen2005survey}.
 
-A crescente demanda por ferramentas de \textit{Buisiness Inteligence} tem atraído diversas empresas para esta área. Isto também tem acontecido no mundo de ferramentas Livres, onde diversas soluções interessantes têm surgido nos últimos anos \cite{gioia2008spagobi}. Dentre tais ferramentas, duas que têm se destacado nos últimos anos são a Pentaho, com um sistema de licença Livre e comercial, onde a última adiciona módulos proprietários, documentação e serviços à ferramenta, e a SpagoBI, com uma filosofia totalmente Livre (sem versões comerciais).
+A crescente demanda por ferramentas de \textit{Business Intelligence} tem atraído diversas empresas para esta área. Isto também tem acontecido no mundo de ferramentas Livres, onde diversas soluções interessantes têm surgido nos últimos anos \cite{gioia2008spagobi}. Dentre tais ferramentas, duas que têm se destacado nos últimos anos são a Pentaho, com um sistema de licença Livre e comercial, onde a última adiciona módulos proprietários, documentação e serviços à ferramenta, e a SpagoBI, com uma filosofia totalmente Livre (sem versões comerciais).
 
 \subsection{Ferramentas}
 
@@ -97,7 +97,7 @@ FROM [Sales]
 WHERE [Time].[1997].[Q2] 
 \end{lstlisting}
 
-A arquitetura da ferramenta é definida em 4 camadas:
+A arquitetura da ferramenta é definida em 4 camadas e pode ser vista na figura \ref{fig:mondrian}:
 
 \begin{itemize}
   \item Camada de apresentação
@@ -117,9 +117,9 @@ A \textbf{camada de apresentação} determina como o usuário visualiza e interage 
 
 \subsubsection{SpagoBI}
 
-SpagoBI é uma plataforma completa de integração para \textit{Buisiness Intelligence}, cobrindo toda a extensão de necessidades de análise, incluindo ETL, OLAP e \textbf{data mining}. Esta integração é feita através de \textit{engines}, possibilitando que o usuário escolha quais ferramentas devem compor sua plataforma \cite{gioia2008spagobi}. As ferramentas que compõe os diversos módulos da SpagoBI podem ser parte do projeto SpagoBI, ferramentas de outros projetos de Licenças Livres ou variações de tais projetos \cite{golfarelli2009open}
+SpagoBI é uma plataforma completa de integração para \textit{Business Intelligence}, cobrindo toda a extensão de necessidades de análise, incluindo ETL, OLAP e \textbf{data mining}. Esta integração é feita através de \textit{engines}, possibilitando que o usuário escolha quais ferramentas devem compor sua plataforma \cite{gioia2008spagobi}. As ferramentas que compõem os diversos módulos da SpagoBI podem ser parte do projeto SpagoBI, ferramentas de outros projetos de Licenças Livres ou variações de tais projetos. \cite{golfarelli2009open}
 
-A arquitetura da ferramenta é definida em 3 camadas:
+A arquitetura da ferramenta é definida em 3 camadas que podem ser vistas na figura \ref{fig:spagoBI}:
 
 \begin{itemize}
   \item Camada de entrega
