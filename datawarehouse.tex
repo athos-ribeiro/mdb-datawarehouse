@@ -11,7 +11,7 @@
      
 \sloppy
 
-\title{Data Warehouses:\\ HP Vertica e armazenamento coluanar}
+\title{Data Warehouses:\\ HP Vertica e armazenamento colunar}
 
 \author{Athos C. Ribeiro\inst{1}, Karoline Bonome\inst{2}, Márcio Stabile\inst{1} }
 
@@ -41,7 +41,8 @@
 
 %Aqui diria por que Data Warehouses são legais \cite{kimball2011data}
 
-De acordo com \cite{Elmasri1999}, o crescente poder de processamento e a sofisticação das ferramentas e técnicas analíticas resultaram no desenvolvimento das \textit{data warehouses}. \textit{Data warehouses} comumente oferecem armazenamento, funcionalidades e responsividade a consultas de um modo que não pode ser realizado em bancos de dados relacionais orientados a transação. Além disso, possuem seu foco em proporcionar informações que sejam úteis a usuários responsáveis por atividades gerenciais, dando suporte à tomada de decisões. Além disso, segundo \cite{Takecian2014}, com o passar dos anos houve um grande crescimento do número de aplicações que necessitam integrar dados provenientes de diversas fontes distintas e muitas vezes o modelo que mais se encaixava na resolução dos problemas de integração de dados é a utilização de um \textit{data warehouse} para unificar os dados.
+
+De acordo com \cite{Elmasri1999}, o crescente poder de processamento e a sofisticação das ferramentas e técnicas analíticas resultaram no desenvolvimento das \textit{data warehouses}. \textit{Data warehouses} comumente oferecem armazenamento, funcionalidades e responsividade a consultas de um modo que não pode ser realizado em bancos de dados relacionais orientados a transação. Além disso, possuem seu foco em proporcionar informações que sejam úteis a usuários responsáveis por atividades gerenciais, dando suporte à tomada de decisões. Além disso, segundo \cite{Takecian2014}, com o passar dos anos houve um grande crescimento do número de aplicações que necessitam integrar dados provenientes de diversas fontes distintas e muitas vezes o modelo que mais se encaixava na resolução dos problemas de integração de dados é a utilização de um \textit{data warehouse}.
 
 \section{Conceitos básicos} \label{sec:firstpage} %Principais conceitos relacionados ao tema
 
@@ -80,7 +81,24 @@ A última característica das \textit{data warehouses} é a variação no tempo. Vari
 
 Até alguns anos atrás, o uso industrial de ferramentas \textit{open source} para \textit{Business Intelligence} ainda não era tão abrangente quanto o uso de ferramentas proprietárias. Ferramentas ETL ainda não eram maduras o suficiente e ferramentas OLAP não eram tão robustas para uso comercial. Em geral, um dos maiores problemas encontrados para a maior parte das ferramentas era a falta de documentação apropriada. \cite{thomsen2005survey}.
 
-A crescente demanda por ferramentas de \textit{Business Intelligence} tem atraído diversas empresas para esta área. Isto também tem acontecido no mundo de ferramentas Livres, onde diversas soluções interessantes têm surgido nos últimos anos \cite{gioia2008spagobi}. Dentre tais ferramentas, duas que têm se destacado nos últimos anos são a Pentaho, com um sistema de licença Livre e comercial, onde a última adiciona módulos proprietários, documentação e serviços à ferramenta, e a SpagoBI, com uma filosofia totalmente Livre (sem versões comerciais).
+A crescente demanda por ferramentas de \textit{Business Intelligence} tem atraído diversas empresas para esta área, como é possível ver na tabela \ref{tab:tools}. Isto também tem acontecido no mundo de ferramentas Livres, onde diversas soluções interessantes têm surgido nos últimos anos \cite{gioia2008spagobi}. Dentre tais ferramentas, duas que têm se destacado nos últimos anos são a Pentaho, com um sistema de licença Livre e comercial, onde a última adiciona módulos proprietários, documentação e serviços à ferramenta, e a SpagoBI, com uma filosofia totalmente Livre (sem versões comerciais).
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Nome}} & \multicolumn{1}{c|}{\textbf{Empresa}} & \textbf{Licença} & \textbf{\begin{tabular}[c]{@{}c@{}}Rank\\ DB-Engines\end{tabular}} & \textbf{Armazenamento} \\ \hline
+Microsoft Analytics & Microsoft & Pago & - & Não informado \\ \hline
+Oracle Data Warehouse & Oracle & Pago & - & Não informado \\ \hline
+IMB dashDB & IBM & Pago & 113 & \begin{tabular}[c]{@{}c@{}}Armazenamento\\ Colunar e por Linhas\end{tabular} \\ \hline
+Amazon Redshift & Amazon & Pago & 37 & \begin{tabular}[c]{@{}c@{}}Armazenamento\\ Colunar\end{tabular} \\ \hline
+Mondrian & Hitachi & Community & - & Hybrid OLAP \\ \hline
+Vertica & HP & Community & 30 & \begin{tabular}[c]{@{}c@{}}Armazenamento\\ Colunar\end{tabular} \\ \hline
+Spago BI & - & Livre & - & ROLAP + Mondrian \\ \hline
+\end{tabular}
+\caption{Ferramentas para Data Warehouse}
+\label{tab:tools}
+\end{table}
 
 \subsection{Ferramentas}
 
