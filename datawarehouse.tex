@@ -7,6 +7,7 @@
 
 \usepackage[brazil]{babel}   
 \usepackage[latin1]{inputenc}  
+\usepackage{textcomp}
 
      
 \sloppy
@@ -173,6 +174,8 @@ Em aplicações cujo caráter é fundamentalmente analítico, as operações transacion
 
 Nesta arquitetura, os valores de cada coluna que compõe as relações no banco de dados são armazenados separadamente no disco. Dessa forma, é preciso fazer a leitura somente das colunas requeridas pela consulta, conferindo maior eficiência em menos tempo. Na proposta do projeto C-Store, implementada pelo Vertica, um conjunto de colunas é armazenado de forma ordenada por algum atributo e comprimida. Este processo será melhor explorado nas subseções a seguir.
 
+Vertica conta ainda com a tecnologia FlexStore\texttrademark, um mecanismo que combina técnicas de projeto físico, armazenamento de bancos de dados e execução de consultas para otimizar a arquitetura colunar do sistema. Estas técnicas incluem o agrupamento de colunas, em que as colunas correlacionadas ou que são sempre consultadas juntas são armazenadas próximas, e o uso inteligente do disco, que reorganiza as cargas de trabalho quando discos de estado sólido (SSD) e discos rígidos (HD) estão disponíveis.
+
 \subsection{Compressão e Codificação dos Dados}
 
 Para melhor performance de consulta e economia de espaço de armazenamento, Vertica aplica métodos robustos de compressão e codificação dos valores contidos em cada coluna, os quais se beneficiam da ordenação dos valores. A depender do tipo de dado, o sistema emprega uma das seguintes técnicas de codificação:
@@ -188,30 +191,35 @@ Além da codificação, Vertica comprime os dados armazenados nas colunas através d
 
 \subsection{Arquitetura Distribuída}
 
-Vertica foi projetado para execução em uma arquitetura shared-nothing utilizando servidores Linux commodity conectados. Baseado nos princípios do Massively Parallel Processing (MPP) associados ao armazenamento colunar, o sistema é capaz de armazenar os dados em clusters, em que cada nó contém uma \textbf{projeção} da tabela original.
+Vertica foi projetado para execução em uma arquitetura \textit{shared-nothing} utilizando servidores Linux \textit{commodity} conectados. Baseado nos princípios do \textit{Massively Parallel Processing} (MPP) associados ao armazenamento colunar, o sistema é capaz de armazenar os dados em clusters, em que cada nó contém uma \textbf{projeção} da tabela original.
 
 Uma projeção é um subconjunto ordenado de atributos (colunas) das tabelas originais no banco de dados. Assim, podem haver diversas projeções com números variados de atributos, as quais podem ser pensadas como visões materializadas do banco de dados. Cada projeção é ordenada segundo um determinado atributo e uma coluna pode estar presente em mais de uma projeção (sobreposição).
 
-Para garantir tolerância a falhas e alta disponibilidade, Vertica se utiliza da redundância dos dados ao longo dos nós do cluster. Através da tecnologia K-Safety, o usuário determina quantas réplicas das projeções existirão (que podem ser 0, 1 ou 2), garantindo que se um nó do cluster estiver indisponível, os processamentos prosseguirão utilizando a réplica disponível em outro nó (o chamado buddy projection).
+Para garantir tolerância a falhas e alta disponibilidade, Vertica se utiliza da redundância dos dados ao longo dos nós do cluster. Através da tecnologia K-Safety, o usuário determina quantas réplicas das projeções existirão (que podem ser 0, 1 ou 2), garantindo que se um nó do cluster estiver indisponível, os processamentos prosseguirão utilizando a réplica disponível em outro nó (o chamado \textit{buddy projection}).
 
 \subsection{Performance Contínua}
 
 Na plataforma Vertica não é necessário interromper as atividades do banco de dados para a execução de atualizações nos dados. É possível consultar e carregar dados simultaneamente, e fazer alterações no esquema do banco de dados sem torná-lo indisponível.
 
-Além dos recursos anteriores, a plataforma Vertica possui capacidade de integração com ferramentas como Apache Hadoop\footnote{\url{https://hadoop.apache.org/}}, Apache Kafka\footnote{\url{http://kafka.apache.org/}} e Informatica PowerCenter\footnote{\url{https://www.informatica.com/}} e suporte a linguagens de programação como o R, o Java e o C++. É oferecida, ainda, uma ferramenta para manipulação de dados espaciais, o HP Vertica Place, cujas funções obedecem ao padrão OGC (Open Geospatial Consortium).
+Isto é possível graças ao modelo de armazenamento híbrido com duas camadas de dados: a \textit{Read Optimized Store} (ROS) e a \textit{Write Optimized Store} (WOS). A primeira é altamente otimizada e orientada a leitura dos dados, armazenada no disco. Esta partição faz uso massivo da compressão e indexação dos dados. Já a partição WOS é uma estrutura residente na memória que comporta dados carregados ao \textit{data warehouse}. Os dados armazenados na WOS não são comprimidos ou indexados para que o carregamento seja feito rapidamente.
 
+  Entre estas camadas, há um terceiro componente, o \textit{Tuple Mover} (TM), responsável por mover os dados da camada WOS para o disco, na camada ROS. Ele também combina pequenos repositórios de dados à projeção armazenada além de remover permanentemente as tuplas deletadas. Esta estrutura está representada na .
 
-\section{Estudo de caso}\label{sec:figs}%Um estudo de caso, reportando o uso da ferramenta escolhida para a criação e manipulação de um banco de dados de exemplo.
+  Além dos recursos anteriores, a plataforma Vertica possui capacidade de integração com ferramentas como Apache Hadoop\footnote{\url{https://hadoop.apache.org/}}, Apache Kafka\footnote{\url{http://kafka.apache.org/}} e Informatica PowerCenter\footnote{\url{https://www.informatica.com/}} e suporte a linguagens de programação como o R, o Java e o C++. É oferecida, ainda, uma ferramenta para manipulação de dados espaciais, o HP Vertica Place, cujas funções obedecem ao padrão OGC (\textit{Open Geospatial Consortium}).
 
-Rodar o Vertica e escrever (com imagens) como se usa, desde os dados no banco relacional até a consulta.
+  Todo o processamento pode ser feito através de consultas analíticas utilizando a linguagem SQL no padrão de 1999. Estão disponíveis uma série de funções de agregação e para cálculos estatísticos. É possível também utilizar extensões da SQL que dão suporte à análise de séries temporais.
+
+  A plataforma Vertica pode ser manipulada de duas formas: 1) através do \textit{Management Console} (MC), uma interface web que permite criar, importar ou conectar a um banco de dados, gerenciar os clusters e nós, monitorar a performance e a execução do sistema, entre outras funções; 2) através da \textit{Administration Tools}, interface em linha de comando que executa as mesmas funções do MC além de executar tarefas administrativas.
+
+  Estas e muitas outras informações estão disponíveis na documentação oficial da plataforma, em versão online ou para download\footnote{\url{https://my.vertica.com/hpe-haven-documentation/hpe-vertica-analytics-platform-7-2-x-product-documentation/}}.
 
 \section{Conclusão}
 
-Com a adesão do modelo relacional, as empresas começaram a ter grandes volumes de dados e com o aumento da competitividade, era necessário transformar esses dados em informação. Como o modelo relacional não conseguia prover os mecanismos para análise gerencial dos dados, surgiram as Data Warehouses.
+O volume crescente de dados disponíveis nos ambientes corporativos gerou a necessidade de haver recursos e ferramentas capazes de extrair informações que possam apoiar o processo de tomada de decisão. Neste contexto, os \textit{data warehouses} tornaram-se a abordagem de escolha para execução de processamentos analíticos de forma otimizada em grandes quantidades de dados, e assim surgiram diversas soluções de software com este propósito.
 
-Por ser objeto de desejo de muitas empresas, soluções proprietárias foram desenvolvidas pelas mais diversas empresas de software. Foi a crescente demanda por ferramentas de Business Intelligence (BI) que possibilitou o surgimento de ferramentas Livres mais robustas. Apesar disso, ainda são muito poucas as ferramentas open-source que podem ser comparadas às proprietárias.
+Dentre as ferramentas disponíveis, a maior parte consiste em extensões de plataformas já existentes (como os sistemas gerenciadores de bancos de dados Oracle e Microsoft SQL Server) com licenças proprietárias. Software Livres normalmente demandam a utilização de mais de uma ferramenta para construção de um ambiente analítico completo, o que pode vir a se tornar um inconveniente para o usuário final ou administradores de sistema menos experiêntes.
 
-Três ferramentas foram apresentadas: O Mondrian, parte do projeto Pentaho da Hitachi, tem seu uso livre, no entanto possui módulos que são pagos. O SpagoBI que é uma solução totalmente open-source que unifica diversas ferramentas diferentes de forma a prover soluções de BI e o Vertica, software que teve seu desenvolvimento iniciado de forma open-source e que foi adquirido pela HP. O Vertica é uma solução completa para análise gerencial e possui uma versão community que permite o uso de todas as ferramentas contidas no software pago com limitações de tamanho da base e número de clusters.
+Sendo assim, conclui-se que a plataforma analítica HP Vertica\textregistered, objeto de discussão do presente estudo, oferece recursos para a criação de um ambiente altamente otimizado para construção e manipulação de \textit{data warehouses} robustos. Além disso, é uma plataforma versátil que dá ao usuário a alternativa de utilizar suas próprias funcionalidades ou integrá-lo a ferramentas externas para execução de tarefas isoladas, como o processo ETL (\textit{Extract, Transform and Load}). Ainda que seja um software proprietário, a essência inicial de ser um projeto acadêmico persiste na versão Community da plataforma, que disponibiliza todos os recursos oferecidos pelo HP Vertica\textregistered com algumas restrições de uso.
 
 %\begin{figure}[ht]
 %\centering
