@@ -2,6 +2,7 @@
 
 \usepackage{sbc-template}
 \usepackage{listings}
+\usepackage{float}
 
 \usepackage{graphicx,url}
 
@@ -191,11 +192,25 @@ Além da codificação, Vertica comprime os dados armazenados nas colunas através d
 
 \subsection{Arquitetura Distribuída}
 
-Vertica foi projetado para execução em uma arquitetura \textit{shared-nothing} utilizando servidores Linux \textit{commodity} conectados. Baseado nos princípios do \textit{Massively Parallel Processing} (MPP) associados ao armazenamento colunar, o sistema é capaz de armazenar os dados em clusters, em que cada nó contém uma \textbf{projeção} da tabela original.
+Vertica foi projetado para execução em uma arquitetura \textit{shared-nothing} utilizando servidores Linux \textit{commodity} conectados. Baseado nos princípios do \textit{Massively Parallel Processing} (MPP) associados ao armazenamento colunar, o sistema é capaz de armazenar os dados em clusters, em que cada nó contém uma \textbf{projeção} da tabela original (Figura \ref{fig:vertica1}).
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/vertica1.png}
+\caption{Representação das projeções utilizadas pela plataforma HP Vertica\textregistered. Estraído de \cite{Lamb2012}}
+\label{fig:vertica1}
+\end{figure}
 
 Uma projeção é um subconjunto ordenado de atributos (colunas) das tabelas originais no banco de dados. Assim, podem haver diversas projeções com números variados de atributos, as quais podem ser pensadas como visões materializadas do banco de dados. Cada projeção é ordenada segundo um determinado atributo e uma coluna pode estar presente em mais de uma projeção (sobreposição).
 
-Para garantir tolerância a falhas e alta disponibilidade, Vertica se utiliza da redundância dos dados ao longo dos nós do cluster. Através da tecnologia K-Safety, o usuário determina quantas réplicas das projeções existirão (que podem ser 0, 1 ou 2), garantindo que se um nó do cluster estiver indisponível, os processamentos prosseguirão utilizando a réplica disponível em outro nó (o chamado \textit{buddy projection}).
+Para garantir tolerância a falhas e alta disponibilidade, Vertica se utiliza da redundância dos dados ao longo dos nós do cluster. Através da tecnologia K-Safety (Figura \ref{fig:vertica2}), o usuário determina quantas réplicas das projeções existirão (que podem ser 0, 1 ou 2), garantindo que se um nó do cluster estiver indisponível, os processamentos prosseguirão utilizando a réplica disponível em outro nó (o chamado \textit{buddy projection}).
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/vertica2.png}
+\caption{Representação do mecanismo K-Safety. Em A todos os cinco nós estão funcionando corretamente com um nível K-Safety = 1. Assim, cada nó contém uma buddy projection do próximo nó. Em B, o nó 2 falha, mas o banco de dados continua executando corretamente, já que o nó 1 contém sua buddy projection. Neste caso, os nós 1 e 3 tornam-se nós críticos, pois se houver falha em um ou nos dois, o banco de dados será inseguro. Extraído de HP Vertica Analytics Platform Version 7.2.x Documentation.}
+\label{fig:vertica2}
+\end{figure}
 
 \subsection{Performance Contínua}
 
@@ -203,7 +218,14 @@ Na plataforma Vertica não é necessário interromper as atividades do banco de dad
 
 Isto é possível graças ao modelo de armazenamento híbrido com duas camadas de dados: a \textit{Read Optimized Store} (ROS) e a \textit{Write Optimized Store} (WOS). A primeira é altamente otimizada e orientada a leitura dos dados, armazenada no disco. Esta partição faz uso massivo da compressão e indexação dos dados. Já a partição WOS é uma estrutura residente na memória que comporta dados carregados ao \textit{data warehouse}. Os dados armazenados na WOS não são comprimidos ou indexados para que o carregamento seja feito rapidamente.
 
-  Entre estas camadas, há um terceiro componente, o \textit{Tuple Mover} (TM), responsável por mover os dados da camada WOS para o disco, na camada ROS. Ele também combina pequenos repositórios de dados à projeção armazenada além de remover permanentemente as tuplas deletadas. Esta estrutura está representada na .
+Entre estas camadas, há um terceiro componente, o \textit{Tuple Mover} (TM), responsável por mover os dados da camada WOS para o disco, na camada ROS. Ele também combina pequenos repositórios de dados à projeção armazenada além de remover permanentemente as tuplas deletadas. Esta estrutura está representada na Figura \ref{fig:vertica3}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.99\textwidth]{images/vertica3.png}
+\caption{Representação das camadas de armazenamento de dados ROS e WOS. Extraído de  HP Vertica Analytics Platform Version 7.2.x Documentation.}
+\label{fig:vertica3}
+\end{figure}
 
   Além dos recursos anteriores, a plataforma Vertica possui capacidade de integração com ferramentas como Apache Hadoop\footnote{\url{https://hadoop.apache.org/}}, Apache Kafka\footnote{\url{http://kafka.apache.org/}} e Informatica PowerCenter\footnote{\url{https://www.informatica.com/}} e suporte a linguagens de programação como o R, o Java e o C++. É oferecida, ainda, uma ferramenta para manipulação de dados espaciais, o HP Vertica Place, cujas funções obedecem ao padrão OGC (\textit{Open Geospatial Consortium}).
 
