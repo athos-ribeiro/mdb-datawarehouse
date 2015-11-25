@@ -28,13 +28,13 @@
 
 \maketitle
 
-\begin{abstract}
-  Do we need an abstract here? I think we do!
-\end{abstract}
-     
-\begin{resumo} 
-  Precisamos de um resumo aqui? Acho que sim!
-\end{resumo}
+%\begin{abstract}
+%  Do we need an abstract here? I think we do!
+%\end{abstract}
+%     
+%\begin{resumo} 
+%  Precisamos de um resumo aqui? Acho que sim!
+%\end{resumo}
 
 
 \section{Motivação} % Contextualização e motivação do tema
@@ -152,9 +152,54 @@ A arquitetura da ferramenta é definida em 3 camadas que podem ser vistas na figu
 \label{fig:spagoBI}
 \end{figure}
 
-\section{Vertica}%Um pouco mais de detalhes de ao menos uma ferramenta escolhida para ilustrar a implementação de conceitos abordados no trabalho
+\section{HP Vertica Analytics Platform}%Um pouco mais de detalhes de ao menos uma ferramenta escolhida para ilustrar a implementação de conceitos abordados no trabalho
 
-Aqui começamos a mostrar por que o Vertica é legal. Armazenamento
+A plataforma analítica HP Vertica compreende um conjunto de ferramentas projetadas para lidar com as demandas atuais ligadas à análise de grandes volumes de dados para extração de informações gerenciais. Trata-se, essencialmente, de um sistema gerenciador de banco de dados relacional, que além das características de sistemas tradicionais, como as transações ACID, a linguagem de consulta padronizada (SQL) e a segurança, ainda apresenta uma série de otimizações que permitem a construção e a manipulação de data warehouses de maneira eficiente. \cite{Bear2012}
+
+Baseado no projeto C-Store, proposto em \cite{Stonebraker2005}, o Vertica tem como principais características os chamados ``Quatro C's'', descritos por \cite{Lamb2012}.
+
+\begin{itemize}
+\item \textbf{Armazenamento colunar} (Columnar Storage)
+\item \textbf{Compressão e codificação dos dados} (Compression and Encoding)
+\item \textbf{Arquitetura distribuída} (Clustering)
+\item \textbf{Performance contínua} (Continuous Performance).
+\end{itemize}
+
+\subsection{Armazenamento Colunar}
+
+Sistemas gerenciadores de bancos de dados tradicionais são comumente projetados em uma arquitetura voltada a cargas de trabalho transacionais (write-optimized), na qual é executado um grande número de transações por segundo envolvendo a inserção ou modificação de tuplas no banco de dados. Neste modelo, os dados são armazenados em disco uma linha (tupla) após a outra, ou seja, cada registro com todos os valores de atributos que compõem uma relação.
+
+Em aplicações cujo caráter é fundamentalmente analítico, as operações transacionais dão lugar ás operações de leitura de grandes conjuntos de registros (como no caso dos data warehouses), sendo necessária uma arquitetura otimizada para estes processos (read-optimized). Assim, sistemas como estes podem se beneficiar do armazenamento colunar, utilizado pela plataforma Vertica.
+
+Nesta arquitetura, os valores de cada coluna que compõe as relações no banco de dados são armazenados separadamente no disco. Dessa forma, é preciso fazer a leitura somente das colunas requeridas pela consulta, conferindo maior eficiência em menos tempo. Na proposta do projeto C-Store, implementada pelo Vertica, um conjunto de colunas é armazenado de forma ordenada por algum atributo e comprimida. Este processo será melhor explorado nas subseções a seguir.
+
+\subsection{Compressão e Codificação dos Dados}
+
+Para melhor performance de consulta e economia de espaço de armazenamento, Vertica aplica métodos robustos de compressão e codificação dos valores contidos em cada coluna, os quais se beneficiam da ordenação dos valores. A depender do tipo de dado, o sistema emprega uma das seguintes técnicas de codificação:
+
+\begin{itemize}
+\item \textbf{Automática:} método padrão. O sistema automaticamente escolhe o tipo de codificação mais vantajosa, com base nas propriedades dos dados;
+\item \textbf{Run Length Encoding (RLE):} aplicado a colunas ordenadas e de baixa cardinalidade, substitui sequências repetidas de valores por uma única ocorrência contendo o valor e o número de vezes em que ele ocorre;
+\item \textbf{Valor Delta:} melhor empregado em colunas de inteiros, ordenados e não ordenados, de alta cardinalidade. Os valores são armazenados como a diferença entre o valor anterior no bloco considerado;
+\item \textbf{Dicionário de Blocos:} para colunas desordenadas com poucos valores distintos, neste caso é criado um dicionário com todos os valores da coluna e estes são substituídos por uma referência ao dicionário construído.
+\end{itemize}
+
+Além da codificação, Vertica comprime os dados armazenados nas colunas através do algoritmo LZO\footnote{\url{http://www.oberhumer.com/opensource/lzo/}}. Com isto, a limitação imposta pela disponibilidade de espaço para armazenamento pode ser superada, já que é possível armazenar uma quantidade muito maior de dados comprimidos (as taxas de compressão variam de 50\% a 90\%). Vale ressaltar que estas taxas de compressão são possíveis devido à otimização do armazenamento, que aloca colunas de mesmo tipo de dado juntas no disco. Entretanto, estes dados dever ser descomprimidos para processamento.
+
+\subsection{Arquitetura Distribuída}
+
+Vertica foi projetado para execução em uma arquitetura shared-nothing utilizando servidores Linux commodity conectados. Baseado nos princípios do Massively Parallel Processing (MPP) associados ao armazenamento colunar, o sistema é capaz de armazenar os dados em clusters, em que cada nó contém uma \textbf{projeção} da tabela original.
+
+Uma projeção é um subconjunto ordenado de atributos (colunas) das tabelas originais no banco de dados. Assim, podem haver diversas projeções com números variados de atributos, as quais podem ser pensadas como visões materializadas do banco de dados. Cada projeção é ordenada segundo um determinado atributo e uma coluna pode estar presente em mais de uma projeção (sobreposição).
+
+Para garantir tolerância a falhas e alta disponibilidade, Vertica se utiliza da redundância dos dados ao longo dos nós do cluster. Através da tecnologia K-Safety, o usuário determina quantas réplicas das projeções existirão (que podem ser 0, 1 ou 2), garantindo que se um nó do cluster estiver indisponível, os processamentos prosseguirão utilizando a réplica disponível em outro nó (o chamado buddy projection).
+
+\subsection{Performance Contínua}
+
+Na plataforma Vertica não é necessário interromper as atividades do banco de dados para a execução de atualizações nos dados. É possível consultar e carregar dados simultaneamente, e fazer alterações no esquema do banco de dados sem torná-lo indisponível.
+
+Além dos recursos anteriores, a plataforma Vertica possui capacidade de integração com ferramentas como Apache Hadoop\footnote{\url{https://hadoop.apache.org/}}, Apache Kafka\footnote{\url{http://kafka.apache.org/}} e Informatica PowerCenter\footnote{\url{https://www.informatica.com/}} e suporte a linguagens de programação como o R, o Java e o C++. É oferecida, ainda, uma ferramenta para manipulação de dados espaciais, o HP Vertica Place, cujas funções obedecem ao padrão OGC (Open Geospatial Consortium).
+
 
 \section{Estudo de caso}\label{sec:figs}%Um estudo de caso, reportando o uso da ferramenta escolhida para a criação e manipulação de um banco de dados de exemplo.
 
