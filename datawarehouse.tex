@@ -156,7 +156,7 @@ A arquitetura da ferramenta é definida em 3 camadas que podem ser vistas na figu
 
 A plataforma analítica HP Vertica compreende um conjunto de ferramentas projetadas para lidar com as demandas atuais ligadas à análise de grandes volumes de dados para extração de informações gerenciais. Trata-se, essencialmente, de um sistema gerenciador de banco de dados relacional, que além das características de sistemas tradicionais, como as transações ACID, a linguagem de consulta padronizada (SQL) e a segurança, ainda apresenta uma série de otimizações que permitem a construção e a manipulação de data warehouses de maneira eficiente. \cite{Bear2012}
 
-Baseado no projeto C-Store, proposto em \cite{Stonebraker2005}, o Vertica tem como principais características os chamados ``Quatro C's'', descritos por \cite{Lamb2012}.
+Baseado no projeto de código aberto C-Store, proposto por \cite{Stonebraker2005}, o Vertica tem como principais características os chamados ``Quatro C's'', descritos por \cite{Lamb2012}.
 
 \begin{itemize}
 \item \textbf{Armazenamento colunar} (Columnar Storage)
@@ -206,6 +206,12 @@ Além dos recursos anteriores, a plataforma Vertica possui capacidade de integraç
 Rodar o Vertica e escrever (com imagens) como se usa, desde os dados no banco relacional até a consulta.
 
 \section{Conclusão}
+
+Com a adesão do modelo relacional, as empresas começaram a ter grandes volumes de dados e com o aumento da competitividade, era necessário transformar esses dados em informação. Como o modelo relacional não conseguia prover os mecanismos para análise gerencial dos dados, surgiram as Data Warehouses.
+
+Por ser objeto de desejo de muitas empresas, soluções proprietárias foram desenvolvidas pelas mais diversas empresas de software. Foi a crescente demanda por ferramentas de Business Intelligence (BI) que possibilitou o surgimento de ferramentas Livres mais robustas. Apesar disso, ainda são muito poucas as ferramentas open-source que podem ser comparadas às proprietárias.
+
+Três ferramentas foram apresentadas: O Mondrian, parte do projeto Pentaho da Hitachi, tem seu uso livre, no entanto possui módulos que são pagos. O SpagoBI que é uma solução totalmente open-source que unifica diversas ferramentas diferentes de forma a prover soluções de BI e o Vertica, software que teve seu desenvolvimento iniciado de forma open-source e que foi adquirido pela HP. O Vertica é uma solução completa para análise gerencial e possui uma versão community que permite o uso de todas as ferramentas contidas no software pago com limitações de tamanho da base e número de clusters.
 
 %\begin{figure}[ht]
 %\centering
